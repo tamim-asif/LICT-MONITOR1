@@ -39,29 +39,29 @@ public class MainMapFragment extends MapFragment{
 
                 .position(new LatLng(Double.parseDouble(str[0]),Double.parseDouble(str[1])))
 
-                .title(eventInfo.getBatchCode())
-                .snippet(eventInfo.getStatus());
-        if(eventInfo.getStatus().equals("scheduled"))
+                .title(eventInfo.getStatusModel().getBatch_code())
+                .snippet(eventInfo.getStatusModel().getStatus());
+        if(eventInfo.getStatusModel().getStatus().equals("scheduled"))
         {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
         }
-        else if(eventInfo.getStatus().equals("ongoing"))
+        else if(eventInfo.getStatusModel().getStatus().equals("ongoing"))
         {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         }
-        else if(eventInfo.getStatus().equals("late"))
+        else if(eventInfo.getStatusModel().getStatus().equals("late"))
         {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         }
-        else if(eventInfo.getStatus().equals("cancelled"))
+        else if(eventInfo.getStatusModel().getStatus().equals("cancelled"))
         {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         }
-        else if(eventInfo.getStatus().equals("completed"))
+        else if(eventInfo.getStatusModel().getStatus().equals("completed"))
         {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         }
-        else if(eventInfo.getStatus().equals("started on time"))
+        else if(eventInfo.getStatusModel().getStatus().equals("started on time"))
         {
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         }
