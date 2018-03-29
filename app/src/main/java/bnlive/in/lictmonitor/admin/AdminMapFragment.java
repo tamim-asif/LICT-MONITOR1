@@ -42,6 +42,7 @@ import java.util.List;
 import bnlive.in.lictmonitor.R;
 import bnlive.in.lictmonitor.model.BatchStatusModel;
 import bnlive.in.lictmonitor.model.MergeSheduleUniversity;
+import bnlive.in.lictmonitor.model.TrainerDetailsModel;
 import bnlive.in.lictmonitor.model.UniversityDetailsModel;
 
 /**
@@ -299,15 +300,92 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
         batchStatusModel.setId(bmodel.getBatch_code());
         batchStatusModel.setStatus(bmodel.getStatus());
       // ,,universityDetailsModel
+
         MergeSheduleUniversity m=new MergeSheduleUniversity();
         m.setStatusModel(batchStatusModel);
         m.setUniversity(universityDetailsModel);
-        listMerge.add(m);
+       // listMerge.add(m);
+        getTrainerDetails(bmodel,universityDetailsModel);
         Log.d(TAG,"reached! "+listMerge.size()+" Data: "+m.toString());
 //        if(listMerge.size()==5)
 //            mapFunc();
     }
+    public void getUniversity(final BatchStatusModel bmodel)
+    {
 
+        db.collection("university_details")
+                .whereEqualTo("university_name",bmodel.getUniversity_name())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot document = task.getResult();
+                            if (document != null) {
+                                DocumentSnapshot doc2=null;
+                                for(DocumentSnapshot doc:document){
+
+                                    Log.d(TAG, "DocumentSnapshot data:  " + doc.toObject(UniversityDetailsModel.class).toString());
+                                    // setUniversityDetailsModel(umodel);
+                                    Log.d("mergedata", "University "+doc.toObject(UniversityDetailsModel.class));
+                                    doc2=doc;
+                                }
+                                getTrainerDetails(bmodel,doc2.toObject(UniversityDetailsModel.class));
+                                //  UniversityDetailsModel umodel=new UniversityDetailsModel(""+document.get("address"),""+document.get("lat_long"),""+document.get("location"),""+document.get("university_name"));
+                                //umodel=document.getData().to
+                                //
+                            } else {
+                                Log.d(TAG, "No such document named "+bmodel.getUniversity_name());
+                            }
+                        } else {
+                            //Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    }
+                });
+
+
+    }
+
+    private void getTrainerDetails(final BatchStatusModel bmodel,final UniversityDetailsModel universityDetailsModel) {
+        Log.d("mergedata", "Query should be trainer details and name:  "+bmodel.getTrainer_name());
+        Task<QuerySnapshot> c= db.collection("trainer_details")
+                .whereEqualTo("name",bmodel.getTrainer_name())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot document = task.getResult();
+                            if (document != null) {
+                                DocumentSnapshot doc2=null;
+                                TrainerDetailsModel tmodel=null;
+                                for(DocumentSnapshot doc:document){
+                                tmodel=doc.toObject(TrainerDetailsModel.class);
+                                    Log.d(TAG, "DocumentSnapshot data:  " + doc.toObject(TrainerDetailsModel.class).toString());
+                                    // setUniversityDetailsModel(umodel);
+                                    Log.d("mergedata1", "Trainer Details "+doc.toObject(TrainerDetailsModel.class).toString());
+                                    doc2=doc;
+
+                                }
+MergeSheduleUniversity muniversity=new MergeSheduleUniversity(bmodel,tmodel,universityDetailsModel);
+                                listMerge.add(muniversity);
+                                Log.d("mymodel",muniversity.toString());
+                                //addMergeList(new MergeSheduleUniversity(bmodel,doc2.toObject(TrainerDetailsModel.class),universityDetailsModel));
+                                //  UniversityDetailsModel umodel=new UniversityDetailsModel(""+document.get("address"),""+document.get("lat_long"),""+document.get("location"),""+document.get("university_name"));
+                                //umodel=document.getData().to
+                                //
+                            } else {
+                                Log.d(TAG, "No such document named "+bmodel.getUniversity_name());
+                                Log.d("mergedata1", "No such document named "+bmodel.getTrainer_name());
+                            }
+                        } else {
+                            //Log.d(TAG, "get failed with ", task.getException());
+                            Log.d("mergedata1", "Error in trainer_details "+ task.getException());
+                        }
+                    }
+                });
+
+    }
     public List<MergeSheduleUniversity> getListMerge() {
         return listMerge;
     }
