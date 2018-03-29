@@ -17,6 +17,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -60,6 +61,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
     public boolean isActivityDistroyed=false;
     public int datasize=0;
     Handler handler;
+    private boolean isMappUpdated=false;
 
     class MapThread extends Thread{
         int currentSize=0;
@@ -80,6 +82,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                          @Override
                          public void run() {
                              mapFunc();
+                             onResume();
                          }
                      });
 
@@ -117,6 +120,16 @@ void mapFunc()
     mapView.onResume();
     mapView.getMapAsync(this);
 }
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+            mMap.clear();
+mapFunc();
+            // add markers from database to the map
+        }
+    }
 MainMapFragment mapFragment;
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -139,11 +152,16 @@ Marker marker=mapFragment.placeMarker(getActivity(),mergeSheduleUniversity,mMap)
 markermap.put(marker,mergeSheduleUniversity);
             if(i==mIndex)
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(str[0]),Double.parseDouble(str[1]))));
-Log.d(TAG,"Lat: "+str[0]+" Long: "+str[1]);
+
+            Log.d(TAG,"Lat: "+str[0]+" Long: "+str[1]);
 //marker.showInfoWindow();
 
         }
+mMap.animateCamera(CameraUpdateFactory.zoomTo( 7.0f ));
 
+mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+mMap.getUiSettings().setAllGesturesEnabled(true);
 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -171,7 +189,7 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
        Log.d("dateCheck",""+timeStamp);
 
         db.collection("batch_status")
-                .whereEqualTo("date",timeStamp)
+              //  .whereEqualTo("date",timeStamp)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {
@@ -277,7 +295,13 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
     public void setUniversityDetailsModel(BatchStatusModel bmodel,UniversityDetailsModel universityDetailsModel) {
 
         this.universityDetailsModel = universityDetailsModel;
-        MergeSheduleUniversity m=new MergeSheduleUniversity(bmodel.getBatch_code(),bmodel.getStatus(),universityDetailsModel);
+        BatchStatusModel batchStatusModel=new BatchStatusModel();
+        batchStatusModel.setId(bmodel.getBatch_code());
+        batchStatusModel.setStatus(bmodel.getStatus());
+      // ,,universityDetailsModel
+        MergeSheduleUniversity m=new MergeSheduleUniversity();
+        m.setStatusModel(batchStatusModel);
+        m.setUniversity(universityDetailsModel);
         listMerge.add(m);
         Log.d(TAG,"reached! "+listMerge.size()+" Data: "+m.toString());
 //        if(listMerge.size()==5)
