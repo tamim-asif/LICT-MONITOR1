@@ -51,8 +51,16 @@ private UniversityDetailsModel umodel;
         address.setText(umodel.getAddress());
         location.setText(umodel.getLocation());
         lat_long.setText(umodel.getLat_long());
-        trainername.setText("Not Set");
-        trainercontact.setText("Not Set");
+        if(data.getTrainerDetailsModel()!=null) {
+            trainername.setText(data.getTrainerDetailsModel().getName());
+            trainercontact.setText("0"+data.getTrainerDetailsModel().getMobile());
+        }
+        else
+        {
+            trainername.setText(data.getStatusModel().getTrainer_name());
+            trainercontact.setText("Data not set");
+        }
+
         callbtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
