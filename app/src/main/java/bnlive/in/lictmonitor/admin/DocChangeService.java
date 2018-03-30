@@ -19,12 +19,14 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import bnlive.in.lictmonitor.R;
 import bnlive.in.lictmonitor.model.BatchStatusModel;
+import bnlive.in.lictmonitor.model.MergeSheduleUniversity;
 
 /**
  * Created by Sk Faisal on 3/26/2018.
@@ -95,8 +97,14 @@ public class DocChangeService extends Service {
 //                                                        .setContentTitle("Batch Status Updated!")
 //                                                        .setContentText("Batch "+model2.getBatch_code()+" has been "+model2.getStatus())
 //                                                        .setContentTitle("Date: "+model2.getDate())
-                                            Intent targetIntent = new Intent(getBaseContext(), AdminNav.class);
+                                            MergeSheduleUniversity mergeSheduleUniversity=new MergeSheduleUniversity();
+                                            mergeSheduleUniversity.setStatusModel(model2);
+                                            Intent targetIntent = new Intent(getBaseContext(), BatchDetailsActivity.class);
+                                            Gson gson=new Gson();
+                                            String data=gson.toJson(mergeSheduleUniversity);
+                                            targetIntent.putExtra("data",data);
                                             PendingIntent contentIntent = PendingIntent.getActivity(getBaseContext(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
                                             int icon;
                                             if(model2.getStatus().equals("ongoing")){
                                                 icon = android.R.drawable.ic_media_play;
@@ -108,10 +116,10 @@ public class DocChangeService extends Service {
                                                 icon = R.drawable.push_notification;
                                             }
                                             Notification notification = new Notification.Builder(getBaseContext())
-                                                    .setSmallIcon(R.drawable.push_notification)
-                                                    .setContentTitle("Batch Status Updated!")
-                                                    .setContentText("Batch " + model2.getBatch_code() + " has been " + model2.getStatus())
-                                                    .setContentTitle("Date: " + model2.getDate())
+.setSmallIcon(R.drawable.ic_stat_name)
+                                                    .setContentTitle("Date: "+model2.getDate())
+                                                    .setContentText("Trainer Name: "+model2.getTrainer_name()+" University: "+model2.getUniversity_name())
+                                                    .setContentTitle(model2.getBatch_code() + "  " + model2.getStatus()+"!")
                                                     .setContentIntent(contentIntent)
                                                     .build();
                                             notification.defaults |=Notification.DEFAULT_VIBRATE;
