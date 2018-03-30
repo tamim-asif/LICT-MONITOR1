@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -63,9 +64,43 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
     public int datasize=0;
     Handler handler;
     private boolean isMappUpdated=false;
-
+private TextView cancelledText;
+private TextView ongoingText;
+private TextView startOnTimeText;
+private TextView sheduledTimeText;
+private TextView notdisplayingTimeText;
+private TextView delayTimeText;
+private TextView completedsuccessfullyText;
+private TextView totalText;
+private TextView totalDisplaying;
+String[] summeryData;
+public void initStatusText()
+{
+    cancelledText=view.findViewById(R.id.textView18);
+    ongoingText=view.findViewById(R.id.textView23);
+    startOnTimeText=view.findViewById(R.id.textView21);
+    sheduledTimeText=view.findViewById(R.id.textView22);
+    notdisplayingTimeText=view.findViewById(R.id.textView25);
+    completedsuccessfullyText=view.findViewById(R.id.textView19);
+    delayTimeText=view.findViewById(R.id.textView20);
+    totalText=view.findViewById(R.id.textView24);
+    totalDisplaying=view.findViewById(R.id.textView26);
+}
+public void setValue(String[] strings)
+{
+    cancelledText.setText("Calcelled: "+strings[0]);
+    ongoingText.setText("Ongoing: "+strings[1]);
+    startOnTimeText.setText("Started On Time: "+strings[2]);
+    sheduledTimeText.setText("Scheduled: "+strings[3]);
+    notdisplayingTimeText.setText("Not Displaying: "+strings[4]);
+    completedsuccessfullyText.setText("Completed Successfully: "+strings[6]);
+    delayTimeText.setText("Delay: "+strings[5]);
+    totalText.setText("Total: "+strings[7]);
+    totalDisplaying.setText("Total Displaying: "+strings[8]);
+}
     class MapThread extends Thread{
         int currentSize=0;
+
      public void run()
      {
          while (true) {
@@ -109,10 +144,66 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
         handler=new Handler();
         mapThread.start();
         realtimeupdate();
-
-
+summeryData=new String[8];
+        initStatusText();
 
         return view;
+    }
+    public void calculateSummeryData(List<MergeSheduleUniversity> mlist)
+    {
+        int cancelled = 0,ongoing = 0,startOnTime = 0,sheduled = 0,notdisplaying,delay = 0,completedsuccessfully = 0,total;
+        for(MergeSheduleUniversity eventInfo:mlist)
+        {
+            if(eventInfo.getStatusModel().getStatus().equals("scheduled"))
+            {
+                sheduled++;
+            }
+            else if(eventInfo.getStatusModel().getStatus().equals("ongoing"))
+            {
+                ongoing++;
+            }
+            else if(eventInfo.getStatusModel().getStatus().equals("late"))
+            {
+                delay++;
+            }
+            else if(eventInfo.getStatusModel().getStatus().equals("cancelled"))
+            {
+                cancelled++;
+            }
+            else if(eventInfo.getStatusModel().getStatus().equals("completed"))
+            {
+                completedsuccessfully++;
+            }
+            else if(eventInfo.getStatusModel().getStatus().equals("started on time"))
+            {
+                startOnTime++;
+            }
+            notdisplaying=listMerge.size()-(sheduled+ongoing+delay+cancelled+completedsuccessfully+startOnTime);
+           total=listMerge.size();
+           int totaldisplaying=sheduled+ongoing+delay+cancelled+completedsuccessfully+startOnTime;
+           summeryData=new String[9];
+//            cancelledText.setText(strings[0]);
+//            ongoingText.setText(strings[1]);
+//            startOnTimeText.setText(strings[3]);
+//            sheduledTimeText.setText(strings[4]);
+//            notdisplayingTimeText.setText(strings[5]);
+//            completedsuccessfullyText.setText(strings[6]);
+//            delayTimeText.setText(strings[7]);
+//            totalText.setText(strings[8]);
+//            totalDisplaying.setText(strings[9]);
+            summeryData[0]=""+cancelled;
+            summeryData[1]=""+ongoing;
+            summeryData[2]=""+startOnTime;
+            summeryData[3]=""+sheduled;
+            summeryData[4]=""+notdisplaying;
+            summeryData[5]=""+completedsuccessfully;
+            summeryData[6]=""+delay;
+            summeryData[7]=""+total;
+            summeryData[8]=""+totaldisplaying;
+            setValue(summeryData);
+         //   summeryData[10]=""+totaldisplaying;
+        }
+
     }
 void mapFunc()
 {
@@ -120,6 +211,7 @@ void mapFunc()
     mapView.onCreate(savedInstanceState);
     mapView.onResume();
     mapView.getMapAsync(this);
+    calculateSummeryData(listMerge);
 }
     @Override
     public void onResume(){
@@ -187,10 +279,12 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
     {
 
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
        Log.d("dateCheck",""+timeStamp);
 
         db.collection("batch_status")
-              //  .whereEqualTo("date",timeStamp)
+
+             //  .whereEqualTo("date","29/03/2018")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {

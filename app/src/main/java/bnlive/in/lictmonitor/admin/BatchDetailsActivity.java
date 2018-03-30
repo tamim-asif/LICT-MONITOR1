@@ -25,6 +25,7 @@ private TextView trainername;
 private TextView trainercontact;
 private ImageButton callbtn;
 private MergeSheduleUniversity data;
+private TextView trainermail;
 private UniversityDetailsModel umodel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ private UniversityDetailsModel umodel;
         trainername=findViewById(R.id.textView15);
         trainercontact=findViewById(R.id.textView16);
         callbtn=findViewById(R.id.imageButton);
-
+        trainermail=findViewById(R.id.textView27);
         Gson gson=new Gson();
         data=gson.fromJson(getIntent().getStringExtra("data"),MergeSheduleUniversity.class);
         umodel=data.getUniversity();
@@ -54,11 +55,13 @@ private UniversityDetailsModel umodel;
         if(data.getTrainerDetailsModel()!=null) {
             trainername.setText(data.getTrainerDetailsModel().getName());
             trainercontact.setText("0"+data.getTrainerDetailsModel().getMobile());
+            trainercontact.setText(data.getTrainerDetailsModel().getEmail());
         }
         else
         {
             trainername.setText(data.getStatusModel().getTrainer_name());
             trainercontact.setText("Data not set");
+            trainermail.setText("Data not set");
         }
 
         callbtn.setOnTouchListener(new View.OnTouchListener() {
