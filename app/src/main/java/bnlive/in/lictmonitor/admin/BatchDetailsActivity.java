@@ -47,11 +47,23 @@ private UniversityDetailsModel umodel;
         data=gson.fromJson(getIntent().getStringExtra("data"),MergeSheduleUniversity.class);
         umodel=data.getUniversity();
         batchcode.setText(data.getStatusModel().getBatch_code());
+        if(umodel!=null)
         university.setText(umodel.getUniversity_name());
+        else
+            university.setText(data.getStatusModel().getTrainer_name());
         status.setText(data.getStatusModel().getStatus());
+        if (umodel!=null)
         address.setText(umodel.getAddress());
+        else
+            address.setVisibility(View.GONE);
+        if(umodel!=null)
         location.setText(umodel.getLocation());
+        else
+            location.setVisibility(View.GONE);
+        if(umodel!=null)
         lat_long.setText(umodel.getLat_long());
+        else
+            lat_long.setVisibility(View.GONE);
         if(data.getTrainerDetailsModel()!=null) {
             trainername.setText(data.getTrainerDetailsModel().getName());
             trainercontact.setText("0"+data.getTrainerDetailsModel().getMobile());

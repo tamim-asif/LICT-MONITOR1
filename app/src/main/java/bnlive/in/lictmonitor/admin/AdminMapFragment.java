@@ -1,15 +1,24 @@
 package bnlive.in.lictmonitor.admin;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +42,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -63,6 +74,9 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
     public boolean isActivityDistroyed=false;
     public int datasize=0;
     Handler handler;
+    private TextView datepickerText;
+    private ImageButton datePickerBtn;
+    private DatePicker datePicker;
     private boolean isMappUpdated=false;
 private TextView cancelledText;
 private TextView ongoingText;
@@ -73,6 +87,7 @@ private TextView delayTimeText;
 private TextView completedsuccessfullyText;
 private TextView totalText;
 private TextView totalDisplaying;
+
 String[] summeryData;
 public void initStatusText()
 {
@@ -85,7 +100,50 @@ public void initStatusText()
     delayTimeText=view.findViewById(R.id.textView20);
     totalText=view.findViewById(R.id.textView24);
     totalDisplaying=view.findViewById(R.id.textView26);
+    datePickerBtn=view.findViewById(R.id.datepickerbtn);
+    datepickerText=view.findViewById(R.id.dateSelectText);
+    datePicker=view.findViewById(R.id.datePicker);
+
+    Drawable drawable;
+
+    if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+        drawable = getActivity().getBaseContext().getResources().getDrawable(R.drawable.ic_004_placeholder, getActivity().getBaseContext().getTheme());
+    } else {
+        drawable = VectorDrawableCompat.create(getActivity().getBaseContext().getResources(), R.drawable.ic_004_placeholder, getActivity().getBaseContext().getTheme());
+    }
+
+    datePickerBtn.setImageDrawable(drawable);
+    datePickerBtn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+//            datePicker.setVisibility(View.VISIBLE);
+//            DialogFragment newFragment = new SelectDateFragment();
+//            newFragment.show(getFragmentManager(), "DatePicker");
+
+        }
+    });
+//    datePickerBtn.setS
 }
+    @SuppressLint("ValidFragment")
+    public class SelectDateFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Calendar calendar = Calendar.getInstance();
+            int yy = calendar.get(Calendar.YEAR);
+            int mm = calendar.get(Calendar.MONTH);
+            int dd = calendar.get(Calendar.DAY_OF_MONTH);
+            return new DatePickerDialog(getActivity(), this, yy, mm, dd);
+        }
+
+        public void onDateSet(DatePicker view, int yy, int mm, int dd) {
+            populateSetDate(yy, mm+1, dd);
+        }
+        public void populateSetDate(int year, int month, int day) {
+            datepickerText.setText(month+"/"+day+"/"+year);
+        }
+
+    }
 public void setValue(String[] strings)
 {
     cancelledText.setText("Calcelled: "+strings[0]);
@@ -284,7 +342,7 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
         db.collection("batch_status")
 
-             //  .whereEqualTo("date","29/03/2018")
+               .whereEqualTo("date","29/03/2018")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {
