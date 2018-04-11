@@ -3,6 +3,7 @@ package bnlive.in.lictmonitor.admin;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -67,7 +68,8 @@ private UniversityDetailsModel umodel;
         if(data.getTrainerDetailsModel()!=null) {
             trainername.setText(data.getTrainerDetailsModel().getName());
             trainercontact.setText("0"+data.getTrainerDetailsModel().getMobile());
-            trainercontact.setText(data.getTrainerDetailsModel().getEmail());
+            trainermail.setText(data.getTrainerDetailsModel().getEmail());
+            Log.d("contact",data.getTrainerDetailsModel().getMobile());
         }
         else
         {

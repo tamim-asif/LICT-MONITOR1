@@ -342,7 +342,7 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
         db.collection("batch_status")
 
-               .whereEqualTo("date","29/03/2018")
+               .whereEqualTo("date",timeStamp)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {
