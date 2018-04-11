@@ -336,6 +336,7 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
     public void realtimeupdate()
     {
 
+
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
 
        Log.d("dateCheck",""+timeStamp);
@@ -352,7 +353,7 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         }
                         if(querySnapshot!=null)
                         {
-
+                            listMerge.clear();
                             for(DocumentSnapshot snapshot:querySnapshot)
                             {
                                 String id=snapshot.getId();
