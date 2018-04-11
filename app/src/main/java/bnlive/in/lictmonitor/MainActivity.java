@@ -20,13 +20,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ImageView imageView = findViewById(R.id.imageView3);
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.slide_in_left);
+        animation.setDuration(2500);
         imageView.startAnimation(animation);
+
         Thread myThread = new Thread() {
             @Override
             public void run() {
                 try {
-                    sleep( 2500 );
+                    sleep( 3000 );
                     Intent intent=new Intent(MainActivity.this,RegistrationLogin.class);
                     startActivity(intent);
                     finish();
