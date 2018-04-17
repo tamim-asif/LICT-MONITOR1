@@ -41,7 +41,7 @@ public class DocChangeService extends Service {
         Log.d(TAG,"service started");
         db=FirebaseFirestore.getInstance();
         notif=(NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
-        Toast.makeText(getBaseContext(),"Service Started",Toast.LENGTH_LONG).show();
+      //  Toast.makeText(getBaseContext(),"Service Started",Toast.LENGTH_LONG).show();
         realtimeUpdate();
         return START_STICKY;
     }

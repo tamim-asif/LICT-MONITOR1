@@ -13,7 +13,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"
         map:cardUseCompatPadding="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
 
         android:layout_height="wrap_content"
         android:id="@+id/cardView">
@@ -26,58 +26,78 @@ android:padding="4sp"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView18"
-                android:layout_width="match_parent"
+                android:id="@+id/datetext"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancelled" />
+                android:text="DATE"
+
+                android:textColor="@android:color/holo_blue_dark" />
+
+
+
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SCHEDULED"
+                android:textColor="@android:color/holo_blue_dark" />
 
             <TextView
                 android:id="@+id/textView19"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Completed" />
+                android:text="COMPLETED"
+                android:textColor="@android:color/holo_blue_dark" />
+
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STARTED"
+                android:textColor="@android:color/holo_blue_dark" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CANCELLED"
+                android:textColor="@android:color/holo_blue_dark" />
 
             <TextView
                 android:id="@+id/textView20"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delay" />
+                android:text="LATE STARTED"
+
+                android:textColor="@android:color/holo_blue_dark" />
 
             <TextView
                 android:id="@+id/textView21"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="Started on time" />
-
-            <TextView
-                android:id="@+id/textView22"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Scheduled" />
-
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ongoing" />
 
             <TextView
                 android:id="@+id/textView25"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="Not displaying" />
 
             <TextView
                 android:id="@+id/textView26"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:text="Total Displaying" />
 
             <TextView
                 android:id="@+id/textView24"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total" />
+                android:text="TOTAL"
+                android:textColor="@android:color/holo_blue_dark" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
@@ -87,6 +107,7 @@ android:padding="4sp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/cardView"
+        android:visibility="gone"
         map:srcCompat="@drawable/googleg_disabled_color_18" />
 
     <TextView
@@ -96,6 +117,7 @@ android:padding="4sp"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="23dp"
         android:layout_marginTop="12dp"
+        android:visibility="gone"
         android:layout_toStartOf="@+id/datepickerbtn"
         android:text="TextView" />
 
