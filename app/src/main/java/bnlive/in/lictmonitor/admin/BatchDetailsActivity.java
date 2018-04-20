@@ -81,7 +81,7 @@ public class BatchDetailsActivity extends AppCompatActivity {
             trainername.setText(data.getTrainerDetailsModel().getName());
             trainercontact.setText("0" + data.getTrainerDetailsModel().getMobile());
             trainermail.setText(data.getTrainerDetailsModel().getEmail());
-            Log.d("contact", data.getTrainerDetailsModel().getMobile());
+         //   Log.d("contact", data.getTrainerDetailsModel().getMobile());
         } else {
             trainername.setText(data.getStatusModel().getTrainer_name());
             trainercontact.setText("Data not set");

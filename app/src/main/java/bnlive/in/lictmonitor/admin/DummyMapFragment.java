@@ -31,27 +31,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,20 +52,16 @@ import java.util.HashMap;
 import java.util.List;
 
 import bnlive.in.lictmonitor.R;
-import bnlive.in.lictmonitor.common.FirestoreOperations;
 import bnlive.in.lictmonitor.model.BatchStatusModel;
 import bnlive.in.lictmonitor.model.MergeSheduleUniversity;
 import bnlive.in.lictmonitor.model.TrainerDetailsModel;
 import bnlive.in.lictmonitor.model.UniversityDetailsModel;
 
-import static java.lang.Thread.interrupted;
-import static java.lang.Thread.sleep;
-
 /**
  * Created by Sk Faisal on 3/26/2018.
  */
 
-public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
+public class DummyMapFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private MapView mapView;
     private UniversityDetailsModel universityDetailsModel;
@@ -99,10 +87,80 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
     private TextView completedsuccessfullyText;
     private TextView totalText;
     private TextView totalDisplaying;
-
+   // private ClusterManager<MyItem> mClusterManager;
+   private ClusterManager<MyItem> mClusterManager;
+    List<ClusterManager<MyItem>> listClusterManager;
+    CustomClusterRenderer renderer;
     String[] summeryData;
     private boolean mLocationPermissionGranted;
+    private void setUpClusterer(List<Object> objlist,int position) {
+//        MergeSheduleUniversity mergeSheduleUniversity = listMerge.get(i);
+//
+//        String ltln = listMerge.get(i).getUniversity().getLat_long();
+//        String[] str = ltln.split(",");
+//       for(Object obj:objlist)
+//       {
+//           MergeSheduleUniversity m= (MergeSheduleUniversity) obj;
+//       }
+        MergeSheduleUniversity m=(MergeSheduleUniversity) objlist.get(objlist.size()/2);
+                String ltln =m.getUniversity().getLat_long();
+        String[] str = ltln.split(",");
+      Double clat=Double.parseDouble(str[0]);
+      Double clon=Double.parseDouble(str[1]);
+        // Position the map.
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(clat, clon), 100));
 
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+
+       // ClusterManager<MyItem> lcluster=listClusterManager.get(position);
+        mClusterManager = new ClusterManager<MyItem>(getActivity(), mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+
+        // Add cluster items (markers) to the cluster manager.
+          renderer = new CustomClusterRenderer(getActivity().getBaseContext(), mMap, mClusterManager);
+        renderer.initSetup();
+
+        addItems(objlist,mClusterManager);
+    }
+    private void addItems(List<Object> objlist,ClusterManager<MyItem> lcluster) {
+
+
+        // Set some lat/lng coordinates to start with.
+//        double lat = 51.5145160;
+//        double lng = -0.1270060;
+//
+//        // Add ten cluster items in close proximity, for purposes of this example.
+//        for (int i = 0; i < 10; i++) {
+//            double offset = i / 60d;
+//            lat = lat + offset;
+//            lng = lng + offset;
+//            MyItem offsetItem = new MyItem(lat, lng);
+//            mClusterManager.addItem(offsetItem);
+//        }
+      //  lcluster=new ClusterManager<MyItem>(getActivity(),mMap);
+        for(Object object:objlist)
+        {
+            MergeSheduleUniversity m= (MergeSheduleUniversity) object;
+            renderer.setEventInfo(m);
+            mClusterManager.setRenderer(renderer);
+            String ltln =m.getUniversity().getLat_long();
+            String[] str = ltln.split(",");
+            Double lat=Double.parseDouble(str[0]);
+            Double lon=Double.parseDouble(str[1]);
+         MyItem offsetItem=new MyItem(lat,lon,m.getStatusModel().getBatch_code(),m.getStatusModel().getStatus());
+//            MyItem offsetItem=new MyItem();
+//            offsetItem.initSetup();
+//            offsetItem.setMarker(getActivity().getBaseContext(),m,mMap);
+        mClusterManager.setAnimation(false);
+        mClusterManager.addItem(offsetItem);
+
+        }
+    }
     public void initStatusText() {
         cancelledText = view.findViewById(R.id.textView18);
         ongoingText = view.findViewById(R.id.textView23);
@@ -123,7 +181,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
 
         Drawable drawable;
 
-        if (android.os.Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             drawable = getActivity().getBaseContext().getResources().getDrawable(R.drawable.ic_004_placeholder, getActivity().getBaseContext().getTheme());
         } else {
             drawable = VectorDrawableCompat.create(getActivity().getBaseContext().getResources(), R.drawable.ic_004_placeholder, getActivity().getBaseContext().getTheme());
@@ -177,43 +235,39 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     class MapThread extends Thread {
-       // int currentSize = 0;
+        int currentSize = 0;
 
         public void run() {
             while (true) {
-               // try {
+                try {
                     if (isActivityDistroyed == true) {
                         Log.d("mapcheck", "Thread distroyed");
                         currentThread().isInterrupted();
                         break;
                     }
-                  //  sleep(60000);
-                  //  Log.d("mapcheck", "Thread Datasize: " + listMerge.size());
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (fo.isMergeUpdated()==true) {
+                    Thread.sleep(100);
+                    Log.d("mapcheck", "Thread Datasize: " + listMerge.size());
+                    if (currentSize != listMerge.size()){
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
                                 mapFunc();
-                              //  onResume();
+                                onResume();
                             }
                         });
 
-                    //    Log.d("mapcheck", "Changed Datasize: " + listMerge.size());
-                    //    currentSize = listMerge.size();
-                        fo.setMergeUpdated(false);
+                        Log.d("mapcheck", "Changed Datasize: " + listMerge.size());
+                        currentSize = listMerge.size();
+                    }
 
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
 
     }
-    Thread thread;
-private FirestoreOperations fo;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -225,64 +279,13 @@ private FirestoreOperations fo;
         MapThread mapThread = new MapThread();
         handler = new Handler();
         mapThread.start();
-        //realtimeupdate();
-        //getBatchStatusData();
-        FireOperation();
-        final Handler handler=new Handler();
-
+        realtimeupdate();
         summeryData = new String[8];
         initStatusText();
-        myupdate();
+
         return view;
     }
-public void FireOperation()
-{
-    fo=new FirestoreOperations();
-    fo.setBatchStatusModelList();
 
-    fo.setTrainerDetailsModelList();
-    fo.setUniversityDetailsModelList();
-    thread=  new Thread(new Runnable() {
-        @Override
-        public void run() {
-
-//                handler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-            while((fo.isBatchUpdated()==false)||(fo.isUniversityUpdated()==false)||(fo.isTrainerUpdated()==false))
-            {
-//                            try {
-//                                sleep(500);
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-                if((fo.isBatchUpdated()==true)&&(fo.isUniversityUpdated()==true)&&(fo.isTrainerUpdated()==true)) {
-                    Log.d("customlistsize", "Batch List: " + fo.getBatchStatusModelList().size());
-                    Log.d("customlistsize", "University List: " + fo.getUniversityDetailsModelList().size());
-                    Log.d("customlistsize", "Trainer List: " + fo.getTrainerDetailsModelList().size());
-                }
-            }
-            fo.setMergeSheduleUniversityList();
-            listMerge=new ArrayList<>();
-            listMerge=fo.getMergeSheduleUniversityList();
-            fo.setBatchUpdated(false);
-            fo.setUniversityUpdated(false);
-            fo.setTrainerUpdated(false);
-            thread.interrupted();
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mapFunc();
-//                            }
-//                        });
-
-
-        }
-//                });
-//            }
-    });
-    thread.start();
-}
     public void calculateSummeryData(List<MergeSheduleUniversity> mlist) {
         int cancelled = 0, ongoing = 0, startOnTime = 0, sheduled = 0, notdisplaying, delay = 0, completedsuccessfully = 0, total;
         for (MergeSheduleUniversity eventInfo : mlist) {
@@ -328,11 +331,17 @@ public void FireOperation()
     }
 
     void mapFunc() {
-        mapView = (MapView) view.findViewById(R.id.map);
-        mapView.onCreate(savedInstanceState);
-        mapView.onResume();
-        mapView.getMapAsync(this);
-        calculateSummeryData(listMerge);
+        try {
+            mapView = (MapView) view.findViewById(R.id.map);
+            mapView.onCreate(savedInstanceState);
+            mapView.onResume();
+            mapView.getMapAsync(this);
+            calculateSummeryData(listMerge);
+        }
+        catch (Exception e)
+        {
+            Log.d("bitmap","Error: "+e);
+        }
     }
 
     @Override
@@ -341,7 +350,14 @@ public void FireOperation()
 
         if (mMap != null) { //prevent crashing if the map doesn't exist yet (eg. on starting activity)
             mMap.clear();
-            mapFunc();
+          //  try {
+                mapFunc();
+//            }
+//            catch (Exception e)
+//            {
+//                Log.d("bitmap","Error: "+e);
+//            }
+
             // add markers from database to the map
         }
     }
@@ -350,8 +366,6 @@ public void FireOperation()
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        final HashMap<Marker, MergeSheduleUniversity> markermap = new HashMap<>();
-  // if(fixDublicacy()==true) {
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
@@ -371,25 +385,85 @@ public void FireOperation()
         // Add a marker in Sydney and move the camera
         int mIndex = listMerge.size() / 2;
 
+        final HashMap<Marker, MergeSheduleUniversity> markermap = new HashMap<>();
+        int k = 0;
+        for (MergeSheduleUniversity mu : listMerge) {
+            String latLong = mu.getUniversity().getLat_long();
+            int j = 0;
+            for (MergeSheduleUniversity mu2 : listMerge) {
+                double offset = 0.002;
+                if (mu2 != mu) {
+                    if (latLong.equals(mu2.getUniversity().getLat_long())) {
+                        String lalo = mu2.getUniversity().getLat_long();
+                        String[] str = lalo.split(",");
+                        double dd = (Double.parseDouble(str[0])) + offset;
+                        offset = offset + offset;
+                        //mu2.getUniversity()
+                        listMerge.get(j).getUniversity().setLat_long(dd + "," + str[1]);
+                        Log.d("ddetect", str[0] + "," + str[1]);
+                    }
+                }
+                j++;
+            }
+            k++;
+        }
 
+int counter=0;
+        List<Object> objlist=new ArrayList<>();
 
-        Log.d("testMerge", "debug");
+listClusterManager=new ArrayList<>();
         for (int i = 0; i < listMerge.size(); i++) {
             MergeSheduleUniversity mergeSheduleUniversity = listMerge.get(i);
 
+            if(counter<=30)
+            {
+//                Marker marker = mapFragment.placeMarker(getActivity().getBaseContext(), mergeSheduleUniversity, mMap);
+//                markermap.put(marker, mergeSheduleUniversity);
+                int pos=0;
+                                if(counter==10)
+                {
+                    ClusterManager<MyItem> m=null;
+                    listClusterManager.add(m);
+                    setUpClusterer(objlist,pos);
+                    objlist=new ArrayList<>();
+                    Log.d("cluster","Cluster set");
+                    pos++;
+                    //break;
+                }
+                if(counter>10&&counter%10==0) {
+                    ClusterManager<MyItem> m=new ClusterManager<MyItem>(getActivity().getBaseContext(),mMap);
+                    listClusterManager.add(m);
+                    addItems(objlist,listClusterManager.get(pos));
+                    objlist=new ArrayList<>();
+                    Log.d("cluster","Cluster set");
+                    pos++;
+                }
+//                if(counter==20)
+//                {
+//                    ClusterManager<MyItem> m=null;
+//                    listClusterManager.add(m);
+//                    setUpClusterer(objlist,1);
+//                    objlist=new ArrayList<>();
+//                    Log.d("cluster","Cluster set");
+//                }
+                // counter=0;
+            }
             String ltln = listMerge.get(i).getUniversity().getLat_long();
-            //  if(ltln!=null) {
             String[] str = ltln.split(",");
 //         Marker marker=mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(str[0]),Double.parseDouble(str[1]))).title("Batch: "+mergeSheduleUniversity.getBatchCode()).snippet(""+mergeSheduleUniversity.getStatus()));
             //  Drawable drawable = VectorDrawableCompat.create(getActivity().getResources(), R.drawable.ic_003_location_1, getActivity().getBaseContext().getTheme());
-            Marker marker = mapFragment.placeMarker(getActivity().getBaseContext(), mergeSheduleUniversity, mMap);
-            markermap.put(marker, mergeSheduleUniversity);
+
             if (i == mIndex)
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(Double.parseDouble(str[0]), Double.parseDouble(str[1]))));
 
+            //markermap.put(marker, mergeSheduleUniversity);
+            objlist.add(listMerge.get(i));
+            counter++;
+
+
             Log.d(TAG, "Lat: " + str[0] + " Long: " + str[1]);
 //marker.showInfoWindow();
-            //  }
+
         }
         mMap.animateCamera(CameraUpdateFactory.zoomTo(7.0f));
 
@@ -407,8 +481,7 @@ public void FireOperation()
         }
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.getUiSettings().setAllGesturesEnabled(true);
-   // }
+mMap.getUiSettings().setAllGesturesEnabled(true);
 mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
     @Override
     public void onInfoWindowClick(Marker marker) {
@@ -429,72 +502,6 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
-//    List<BatchStatusModel> batchStatusModelList;
-//    public  void getBatchStatusData()
-//    {
-//        batchStatusModelList=new ArrayList<>();
-//        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
-//        db.collection("batch_status")
-//                .whereEqualTo("date",timeStamp)
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot querySnapshot) {
-//                        for (DocumentSnapshot doc:querySnapshot)
-//                        {
-//
-//                            BatchStatusModel model=doc.toObject(BatchStatusModel.class);
-//                           batchStatusModelList.add(model);
-//                        }
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//Log.d("myTest","Failed Batch Model "+e);
-//                    }
-//                });
-//
-//    }
-
-
-    public void setThisUniversity(UniversityDetailsModel university)
-    {
-        this.universityDetailsModel=university;
-    }
-    public UniversityDetailsModel getThisUni()
-    {
-        return this.universityDetailsModel;
-    }
-    public void myupdate()
-    {
-        db.collection("batch_status")
-
-                .whereEqualTo("date","19/04/2018")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-
-                    //}
-                    @Override
-                    public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {
-                        for (DocumentChange documentChange : querySnapshot.getDocumentChanges()) {
-                            switch (documentChange.getType()) {
-                                case ADDED:
-
-
-                                    break;
-                                case MODIFIED:
-                                  //  FireOperation();
-//fo.setMergeUpdated(true);
-                                    break;
-                                case REMOVED:
-                                    //FireOperation();
-                                    //fo.setMergeUpdated(true);
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
     public void realtimeupdate()
     {
 
@@ -505,7 +512,7 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
         db.collection("batch_status")
 
-               .whereEqualTo("date","18/04/2018")
+               .whereEqualTo("date",timeStamp)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {
@@ -730,30 +737,30 @@ MergeSheduleUniversity muniversity=new MergeSheduleUniversity(bmodel,tmodel,univ
      * onRequestPermissionsResult.
      */
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     123);
         }
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     124);
         }
         if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                android.Manifest.permission.ACCESS_NETWORK_STATE)
+                Manifest.permission.ACCESS_NETWORK_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{android.Manifest.permission.ACCESS_NETWORK_STATE},
+                    new String[]{Manifest.permission.ACCESS_NETWORK_STATE},
                     125);
         }
     }
