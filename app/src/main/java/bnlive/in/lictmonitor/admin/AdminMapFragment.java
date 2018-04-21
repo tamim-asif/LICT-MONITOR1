@@ -225,6 +225,7 @@ private FirestoreOperations fo;
         MapThread mapThread = new MapThread();
         handler = new Handler();
         mapThread.start();
+
         //realtimeupdate();
         //getBatchStatusData();
         FireOperation();

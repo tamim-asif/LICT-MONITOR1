@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import bnlive.in.lictmonitor.R;
@@ -41,11 +44,20 @@ public class DashboardFragment extends Fragment{
     View view;
     Context context;
     private RecyclerView myListView;
-    private RecyclerView.Adapter adapter;
+    private CustomStatusAdapter adapter;
     private List<BatchStatusModel> dataList;
     private RecyclerView.LayoutManager mLayoutManager;
     private FirebaseFirestore db;
     private String TAG="dashboardfragment";
+    private  boolean isDataUpdated;
+    private SearchView searchView;
+    public boolean isDataUpdated() {
+        return isDataUpdated;
+    }
+
+    public void setDataUpdated(boolean dataUpdated) {
+        isDataUpdated = dataUpdated;
+    }
 
     NotificationManager notif;
     @Nullable
@@ -62,6 +74,7 @@ public class DashboardFragment extends Fragment{
         dataList=new ArrayList<>();
         mLayoutManager = new LinearLayoutManager(getActivity());
         myListView.setLayoutManager(mLayoutManager);
+        searchView=view.findViewById(R.id.searchview);
         notif=(NotificationManager)getActivity().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 //        BatchStatusModel statusModel=new BatchStatusModel();
 //        statusModel.setDate("03/26/2018");
@@ -81,10 +94,26 @@ public class DashboardFragment extends Fragment{
 
         return view;
     }
+public void searchView()
+{
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            adapter.filter(query);
+            return true;
+        }
 
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            adapter.filter(newText);
+            return true;
+        }
+    });
+
+}
     public void setDataList(List<BatchStatusModel> dataList) {
         this.dataList = dataList;
-        adapter=new CustomStatusAdapter(dataList);
+        adapter=new CustomStatusAdapter(dataList,getActivity().getBaseContext());
         myListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -93,7 +122,10 @@ public class DashboardFragment extends Fragment{
 
     public void realtimeUpdate()
     {
+        Calendar calendar=Calendar.getInstance();
+        String timestamp=new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
         db.collection("batch_status")
+                .whereEqualTo("date",timestamp)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {
@@ -113,36 +145,9 @@ public class DashboardFragment extends Fragment{
                                 Log.d(TAG,"Data: "+model.toString());
                             }
                             setDataList(list);
-                            for (DocumentChange documentChange:querySnapshot.getDocumentChanges())
-                            {
-                                    switch (documentChange.getType())
-                                    {
-                                        case ADDED:
-                                            String id=documentChange.getDocument().getId();
-                                            BatchStatusModel model=documentChange.getDocument().toObject(BatchStatusModel.class);
-                                            model.setId(id);
-                                            Log.d(TAG,"Data Added: "+model.toString());
-                                            break;
-                                        case MODIFIED:
-                                            String id2=documentChange.getDocument().getId();
-                                            BatchStatusModel model2=documentChange.getDocument().toObject(BatchStatusModel.class);
-                                            model2.setId(id2);
-                                            Log.d(TAG,"Data Modified: "+model2.toString());
-//                                            Notification notification=new Notification.Builder
-//                                                    (getActivity().getApplicationContext()).setContentTitle("Batch Status Updated!").setContentText("Batch "+model2.getBatch_code()+" has been "+model2.getStatus()).
-//                                                    setContentTitle("Date: "+model2.getDate()).setSmallIcon(R.drawable.ic_menu_gallery).build();
-//
-//                                            notification.flags |= Notification.FLAG_AUTO_CANCEL;
-//                                            notif.notify(1, notification);
-                                            break;
-                                        case REMOVED:
-                                            String id3=documentChange.getDocument().getId();
-                                            BatchStatusModel model3=documentChange.getDocument().toObject(BatchStatusModel.class);
-                                            model3.setId(id3);
-                                            Log.d(TAG,"Data Modified: "+model3.toString());
-                                            break;
-                                    }
-                            }
+                            Log.d("Data","Data add success!");
+setDataUpdated(true);
+                            searchView();
                         }
                     }
                 });

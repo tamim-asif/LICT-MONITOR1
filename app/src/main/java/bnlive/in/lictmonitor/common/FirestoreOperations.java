@@ -32,6 +32,9 @@ public class FirestoreOperations {
     List<UniversityDetailsModel> universityDetailsModelList;
     List<MergeSheduleUniversity> mergeSheduleUniversityList;
     List<TrainerDetailsModel> trainerDetailsModelList;
+    private TrainerDetailsModel trainerDetailsModel;
+    private UniversityDetailsModel universityDetailsModel;
+    private BatchStatusModel batchStatusModel;
     boolean isBatchUpdated;
     boolean isUniversityUpdated;
     boolean isTrainerUpdated;
@@ -41,7 +44,7 @@ public class FirestoreOperations {
         batchStatusModelList=new ArrayList<>();
         String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         db.collection("batch_status")
-                .whereEqualTo("date","18/04/2018")
+                .whereEqualTo("date",timeStamp)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -252,7 +255,66 @@ isTrainerUpdated=true;
         }
     isMergeUpdated=true;
     }
+public void getSingleBatchData(String batchCode)
+{
+    db.collection("batch_status").document(batchCode)
 
+            .get()
+            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    //   bm=null;
+                    TrainerDetailsModel tn=null;
+                    UniversityDetailsModel un=null;
+
+                        BatchStatusModel  bm =documentSnapshot.toObject(BatchStatusModel.class);
+                        bm.setId(documentSnapshot.getId());
+                        setBatchStatusModel(bm);
+                        Log.d("checkSingle",bm.toString());
+
+                    // setBatchStatusModel(getBatchStatusModel());
+
+                    if(getBatchStatusModel()!=null)
+                    {
+                        db.collection("trainer_details")
+                                .whereEqualTo("name",getBatchStatusModel().getTrainer_name())
+                                .get()
+
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                                        for(DocumentSnapshot documentSnapshot:documentSnapshots)
+                                        {
+                                            TrainerDetailsModel tn=documentSnapshot.toObject(TrainerDetailsModel.class);
+                                            setTrainerDetailsModel(tn);
+                                        }
+                                        setTrainerUpdated(true);
+                                        Log.d("checkSingle",getTrainerDetailsModel().toString());
+                                    }
+                                });
+                        db.collection("university_details")
+                                .whereEqualTo("university_name",getBatchStatusModel().getUniversity_name())
+                                //.whereEqualTo("location",bm.getUniversity_name())
+                                .get()
+
+                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot documentSnapshots) {
+                                        for(DocumentSnapshot documentSnapshot:documentSnapshots)
+                                        {
+                                            UniversityDetailsModel tn=documentSnapshot.toObject(UniversityDetailsModel.class);
+                                            setUniversityDetailsModel(tn);
+                                        }
+                                        setUniversityUpdated(true);
+                                        Log.d("checkSingle",getUniversityDetailsModel().toString());
+                                    }
+                                });
+                    }
+                }
+
+
+            });
+}
     public boolean isMergeUpdated() {
         return isMergeUpdated;
     }
@@ -299,5 +361,29 @@ isTrainerUpdated=true;
 
     public void setTrainerUpdated(boolean trainerUpdated) {
         isTrainerUpdated = trainerUpdated;
+    }
+
+    public TrainerDetailsModel getTrainerDetailsModel() {
+        return trainerDetailsModel;
+    }
+
+    public void setTrainerDetailsModel(TrainerDetailsModel trainerDetailsModel) {
+        this.trainerDetailsModel = trainerDetailsModel;
+    }
+
+    public UniversityDetailsModel getUniversityDetailsModel() {
+        return universityDetailsModel;
+    }
+
+    public void setUniversityDetailsModel(UniversityDetailsModel universityDetailsModel) {
+        this.universityDetailsModel = universityDetailsModel;
+    }
+
+    public BatchStatusModel getBatchStatusModel() {
+        return batchStatusModel;
+    }
+
+    public void setBatchStatusModel(BatchStatusModel batchStatusModel) {
+        this.batchStatusModel = batchStatusModel;
     }
 }

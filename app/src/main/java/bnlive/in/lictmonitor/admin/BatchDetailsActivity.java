@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,7 +24,10 @@ import com.google.gson.Gson;
 import java.util.Calendar;
 
 import bnlive.in.lictmonitor.R;
+import bnlive.in.lictmonitor.common.FirestoreOperations;
+import bnlive.in.lictmonitor.model.BatchStatusModel;
 import bnlive.in.lictmonitor.model.MergeSheduleUniversity;
+import bnlive.in.lictmonitor.model.TrainerDetailsModel;
 import bnlive.in.lictmonitor.model.UniversityDetailsModel;
 
 public class BatchDetailsActivity extends AppCompatActivity {
@@ -39,11 +43,13 @@ public class BatchDetailsActivity extends AppCompatActivity {
     private MergeSheduleUniversity data;
     private TextView trainermail;
     private UniversityDetailsModel umodel;
+    FirestoreOperations firestoreOperations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batch_details);
+
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         batchcode = findViewById(R.id.textView4);
@@ -58,7 +64,75 @@ public class BatchDetailsActivity extends AppCompatActivity {
         trainermail = findViewById(R.id.textView27);
         Gson gson = new Gson();
         data = gson.fromJson(getIntent().getStringExtra("data"), MergeSheduleUniversity.class);
-        umodel = data.getUniversity();
+        Log.d("dataname","Data: "+data);
+       getAllData(data.getStatusModel().getId());
+
+
+        callbtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        callbtn.setAlpha(1.0f);
+                        requestCallPermission(true, trainercontact.getText().toString());
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        callbtn.setAlpha(0.5f);
+                        break;
+                }
+                return false;
+            }
+        });
+
+    }
+public void getAllData(String batchCode)
+{
+    Log.d("checkSingle","Code: "+batchCode);
+    firestoreOperations = new FirestoreOperations();
+    firestoreOperations.getSingleBatchData(batchCode);
+    final BatchStatusModel bm=firestoreOperations.getBatchStatusModel();
+    final TrainerDetailsModel tn=firestoreOperations.getTrainerDetailsModel();
+    final UniversityDetailsModel un=firestoreOperations.getUniversityDetailsModel();
+    final Handler handler=new Handler();
+    Thread thread=new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while(firestoreOperations.isTrainerUpdated()!=true&&firestoreOperations.isUniversityUpdated()!=true)
+            {
+
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if(firestoreOperations.isTrainerUpdated()==true&&firestoreOperations.isUniversityUpdated()==true)
+                {
+                    final MergeSheduleUniversity mn=new MergeSheduleUniversity();
+                    mn.setStatusModel(firestoreOperations.getBatchStatusModel());
+                    mn.setTrainerDetailsModel(firestoreOperations.getTrainerDetailsModel());
+                    mn.setUniversity(firestoreOperations.getUniversityDetailsModel());
+                    Log.d("mydb","MyData: "+mn.toString());
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            fillAllData(mn);
+                        }
+                    });
+
+                }
+               else Log.d("checkSingle","Data not updated! ");
+            }
+        }
+    });
+thread.start();
+}
+private void fillAllData(MergeSheduleUniversity data)
+{
+
+            umodel = data.getUniversity();
         batchcode.setText(data.getStatusModel().getBatch_code());
         if (umodel != null)
             university.setText(umodel.getUniversity_name());
@@ -87,27 +161,7 @@ public class BatchDetailsActivity extends AppCompatActivity {
             trainercontact.setText("Data not set");
             trainermail.setText("Data not set");
         }
-
-        callbtn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        callbtn.setAlpha(1.0f);
-                        requestCallPermission(true, trainercontact.getText().toString());
-                        break;
-                    case MotionEvent.ACTION_DOWN:
-                        callbtn.setAlpha(0.5f);
-                        break;
-                }
-                return false;
-            }
-        });
-
-    }
-
+}
     private void requestCallPermission(boolean flag, final String number) {
         // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
