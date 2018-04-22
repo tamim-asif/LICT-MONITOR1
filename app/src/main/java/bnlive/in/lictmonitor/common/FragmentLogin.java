@@ -74,7 +74,7 @@ public class FragmentLogin extends Fragment {
             {
                 Intent intent=new Intent(context, AdminNav.class);
                 startActivity(intent);
-              //  getActivity().finish();
+               getActivity().finish();
             }
 
         }

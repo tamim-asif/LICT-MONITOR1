@@ -134,7 +134,10 @@ long currenttime;
     public void onBackPressed() {
         if(currenttime>System.currentTimeMillis()){
           //  onDestroy();
-            System.exit(0);
+//           Intent intent = new Intent(AdminNav.this,BlankActivity.class);
+//           startActivity(intent);
+            this.finish();
+            //Toast.makeText(getBaseContext(),"Double pressed!",Toast.LENGTH_LONG).show();
         }
         else{
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -144,6 +147,7 @@ long currenttime;
            // super.onBackPressed();
         }
         }
+       // getSupportFragmentManager().popBackStack();
         currenttime=System.currentTimeMillis()+2000;
         Toast.makeText(getBaseContext(),"Press once again to exit the app",Toast.LENGTH_LONG).show();
     }
@@ -219,7 +223,16 @@ long currenttime;
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_logout) {
-            finish();
+SharedPreferences.Editor editor=sharedPreferences.edit();
+editor.putString("role",null);
+editor.commit();
+          this.finish();
+           // startActivity(new Intent(getApplicationContext(), RegistrationLogin.class));
+//            fragmentManager=getSupportFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.changeLayout,new BlankFragment()).commit();
+
+            Intent intent=new Intent(this,RegistrationLogin.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 

@@ -195,6 +195,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                     e.printStackTrace();
                 }
                 if (fo.isMergeUpdated()==true) {
+                    Log.d("checkThread","merge  true");
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -208,6 +209,7 @@ public class AdminMapFragment extends Fragment implements OnMapReadyCallback {
                         fo.setMergeUpdated(false);
 
                 }
+
             }
         }
 
@@ -282,7 +284,15 @@ public void FireOperation()
 //                });
 //            }
     });
+    if(thread.isAlive()==false){
     thread.start();
+    Log.d("checkThread","thread  started");
+
+    }
+    else
+    {
+        Log.d("checkThread","thread not started");
+    }
 }
     public void calculateSummeryData(List<MergeSheduleUniversity> mlist) {
         int cancelled = 0, ongoing = 0, startOnTime = 0, sheduled = 0, notdisplaying, delay = 0, completedsuccessfully = 0, total;
@@ -469,9 +479,10 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
     }
     public void myupdate()
     {
+        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
         db.collection("batch_status")
+                .whereEqualTo("date",timeStamp)
 
-                .whereEqualTo("date","19/04/2018")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
 
                     //}
@@ -484,10 +495,11 @@ mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
                                     break;
                                 case MODIFIED:
-                                  //  FireOperation();
+                                 FireOperation();
 //fo.setMergeUpdated(true);
                                     break;
                                 case REMOVED:
+                                    FireOperation();
                                     //FireOperation();
                                     //fo.setMergeUpdated(true);
                                     break;

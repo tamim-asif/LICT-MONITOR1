@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import bnlive.in.lictmonitor.R;
 import bnlive.in.lictmonitor.RegistrationLogin;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 /**
  * Created by Sk Faisal on 3/27/2018.
  */
@@ -22,7 +24,13 @@ public class BlankFragment extends Fragment {
 //        Intent intent=new Intent(getActivity().getBaseContext(), RegistrationLogin.class);
 //        startActivity(intent);
       //  getActivity().finish();
-        View view=inflater.inflate(R.layout.activity_blank,container,false);
+        View view=inflater.inflate(R.layout.blankfragment,container,false);
+        Intent intent=new Intent(getActivity().getBaseContext(),RegistrationLogin.class);
+       intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+
+//        getActivity().getBaseContext().startActivity(intent);
+       getActivity().finish();
+        startActivity(intent);
         return view;
     }
 }

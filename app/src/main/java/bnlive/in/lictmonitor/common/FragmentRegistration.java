@@ -69,6 +69,7 @@ public class FragmentRegistration extends Fragment {
                 String password=passwordText.getText().toString();
                 String role="";
                 role="admin";
+
                 registration(nametext,email,password,role);
             }
         });
@@ -104,6 +105,8 @@ public class FragmentRegistration extends Fragment {
         map.put("name",name);
         map.put("email",email);
         map.put("role",role);
+        map.put("access",null);
+        map.put("status",null);
       db.collection(collection)
               .add(map)
               .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
