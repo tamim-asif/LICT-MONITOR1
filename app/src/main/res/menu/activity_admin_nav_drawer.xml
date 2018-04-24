@@ -6,19 +6,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:icon="@drawable/ic_collection_eye"
+            android:title="Monitor" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:icon="@drawable/group"
+            android:title="Trainers" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:icon="@drawable/ic_mortarboard"
+            android:title="University" />
+        <item
+            android:id="@+id/nav_users"
+            android:icon="@drawable/user_settings"
+            android:title="User Mangage" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/powericon"
             android:title="Log Out" />
     </group>
 

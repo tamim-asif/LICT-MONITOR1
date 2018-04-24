@@ -5,40 +5,85 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
+        <bnlive.in.lictmonitor.customfonts.MyEditText
 
-        <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="name"
-            android:inputType="textPersonName" />
 
-        <EditText
+            android:inputType="text"
+            android:textColor="#000"
+            android:background="#f0f0f4"
+            android:padding="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="admin name"
+            android:drawableLeft="@drawable/user"
+            android:drawablePadding="16dp"
+            />
+        <bnlive.in.lictmonitor.customfonts.MyEditText
+
             android:id="@+id/r_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="email"
-            android:inputType="textEmailAddress" />
 
-        <EditText
+            android:inputType="text"
+            android:textColor="#000"
+            android:background="#f0f0f4"
+            android:padding="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="admin email"
+            android:drawableLeft="@drawable/email"
+            android:drawablePadding="16dp"
+            />
+
+        <bnlive.in.lictmonitor.customfonts.MyEditText
+
             android:id="@+id/r_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="password"
-            android:inputType="textPassword" />
 
-        <EditText
+            android:inputType="textPassword"
+            android:textColor="#000"
+            android:background="#f0f0f4"
+            android:padding="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="admin password"
+
+            android:drawablePadding="16dp"
+            />
+
+        <bnlive.in.lictmonitor.customfonts.MyEditText
+
             android:id="@+id/r_repassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
+
+            android:inputType="text"
+            android:textColor="#000"
+            android:background="#f0f0f4"
+            android:padding="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:hint="re-type password"
-            android:inputType="textPersonName" />
+
+            android:drawablePadding="16dp"
+            />
+
+
+
 
 
 
@@ -46,9 +91,17 @@
 
         <Button
             android:id="@+id/r_registerbtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:text="REGISTER" />
+            android:background="@drawable/rounded1"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="70dp"
+            android:layout_marginRight="70dp"
+            android:textAlignment="center"
+            android:padding="14dp"
+            android:text="Create Account"
+            android:textSize="16dp"
+            android:textColor="#fff" />
     </LinearLayout>
 </RelativeLayout>

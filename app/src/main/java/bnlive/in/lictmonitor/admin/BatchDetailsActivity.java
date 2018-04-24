@@ -193,7 +193,7 @@ private void fillAllData(MergeSheduleUniversity data)
             if (flag == true) {
                 new AlertDialog.Builder(BatchDetailsActivity.this)
                         .setTitle("Warining!")
-                        .setMessage("Are you sure to this number?\n"+number)
+                        .setMessage("Are you sure to call this number?\n"+number)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 

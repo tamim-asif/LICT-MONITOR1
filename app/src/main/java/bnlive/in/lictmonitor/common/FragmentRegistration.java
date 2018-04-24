@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +42,8 @@ public class FragmentRegistration extends Fragment {
     FirebaseFirestore db;
     EditText emailText;
     EditText passwordText;
-    TextView repasswordText;
+    EditText repasswordText;
+
     TextView name;
 
     String collectionName="user_manage";
@@ -56,7 +58,12 @@ public class FragmentRegistration extends Fragment {
         db=FirebaseFirestore.getInstance();
         emailText=view.findViewById(R.id.r_email);
         passwordText=view.findViewById(R.id.r_password);
+
+
+        VectorDrawableCompat drawableCompat=VectorDrawableCompat.create(getActivity().getResources(), R.drawable.ic_key, passwordText.getContext().getTheme());
+        passwordText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawableCompat, null, null, null);
         repasswordText=view.findViewById(R.id.r_repassword);
+        repasswordText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawableCompat, null, null, null);
 
         name=view.findViewById(R.id.editText);
 
