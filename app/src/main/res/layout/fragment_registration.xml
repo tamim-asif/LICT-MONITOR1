@@ -2,106 +2,104 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-        <bnlive.in.lictmonitor.customfonts.MyEditText
+        android:layout_height="match_parent">
 
-            android:id="@+id/editText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-            android:inputType="text"
-            android:textColor="#000"
-            android:background="#f0f0f4"
-            android:padding="12dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:hint="admin name"
-            android:drawableLeft="@drawable/user"
-            android:drawablePadding="16dp"
-            />
-        <bnlive.in.lictmonitor.customfonts.MyEditText
+            <bnlive.in.lictmonitor.customfonts.MyEditText
 
-            android:id="@+id/r_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            android:inputType="text"
-            android:textColor="#000"
-            android:background="#f0f0f4"
-            android:padding="12dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:hint="admin email"
-            android:drawableLeft="@drawable/email"
-            android:drawablePadding="16dp"
-            />
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:background="#f0f0f4"
+                android:drawableLeft="@drawable/user"
+                android:drawablePadding="16dp"
+                android:hint="admin name"
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="#000" />
 
-        <bnlive.in.lictmonitor.customfonts.MyEditText
+            <bnlive.in.lictmonitor.customfonts.MyEditText
 
-            android:id="@+id/r_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+                android:id="@+id/r_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            android:inputType="textPassword"
-            android:textColor="#000"
-            android:background="#f0f0f4"
-            android:padding="12dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:hint="admin password"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:background="#f0f0f4"
+                android:drawableLeft="@drawable/email"
+                android:drawablePadding="16dp"
+                android:hint="admin email"
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="#000" />
 
-            android:drawablePadding="16dp"
-            />
+            <bnlive.in.lictmonitor.customfonts.MyEditText
 
-        <bnlive.in.lictmonitor.customfonts.MyEditText
+                android:id="@+id/r_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-            android:id="@+id/r_repassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:background="#f0f0f4"
+                android:drawablePadding="16dp"
+                android:hint="admin password"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:drawableLeft="@drawable/passicon"
+                android:textColor="#000" />
 
-            android:inputType="text"
-            android:textColor="#000"
-            android:background="#f0f0f4"
-            android:padding="12dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:hint="re-type password"
+            <bnlive.in.lictmonitor.customfonts.MyEditText
 
-            android:drawablePadding="16dp"
-            />
+                android:id="@+id/r_repassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-
-
-
-
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:background="#f0f0f4"
+                android:drawablePadding="16dp"
+                android:hint="re-type password"
+                android:inputType="text"
+                android:padding="12dp"
+                android:drawableLeft="@drawable/passicon"
+                android:textColor="#000" />
 
 
+            <Button
+                android:id="@+id/r_registerbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginRight="70dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/rounded1"
+                android:padding="14dp"
+                android:text="Create Account"
+                android:textAlignment="center"
+                android:textColor="#fff"
+                android:textSize="16dp" />
+        </LinearLayout>
+    </ScrollView>
 
-        <Button
-            android:id="@+id/r_registerbtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded1"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="70dp"
-            android:layout_marginRight="70dp"
-            android:textAlignment="center"
-            android:padding="14dp"
-            android:text="Create Account"
-            android:textSize="16dp"
-            android:textColor="#fff" />
-    </LinearLayout>
 </RelativeLayout>

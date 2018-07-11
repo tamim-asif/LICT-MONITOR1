@@ -176,7 +176,7 @@ else
 //
 //        }
             Marker m  = googleMap.addMarker(markerOptions);
-            m.showInfoWindow();
+           // m.showInfoWindow();
 
 
             return m;
