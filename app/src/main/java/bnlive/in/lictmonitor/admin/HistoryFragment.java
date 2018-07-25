@@ -4,12 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +43,11 @@ public class HistoryFragment extends Fragment {
     FirebaseStorage storage;
     StorageReference reference;
     private Button getImageBtn;
+    boolean flag;
+    private LinearLayout layout1;
+    private LinearLayout layout2;
+    private LinearLayout layout3;
+    private LinearLayout layout4;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +58,11 @@ public class HistoryFragment extends Fragment {
         db=FirebaseFirestore.getInstance();
         storage=FirebaseStorage.getInstance();
         getImageBtn=view.findViewById(R.id.getImageBtn);
+        layout1=view.findViewById(R.id.layout1);
+        layout2=view.findViewById(R.id.layout2);
+        layout3=view.findViewById(R.id.layout3);
+        layout4=view.findViewById(R.id.layout4);
+        flag=true;
         getImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,9 +91,54 @@ public class HistoryFragment extends Fragment {
         });
         reference=storage.getReference();
         realtimeUpdate();
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+selectImage();
+            }
+        });
         return view;
     }
     List<BatchStatusModel> batchList;
+
+
+    public void selectImage()
+    {
+        if(flag==true)
+        {
+            dateSpinner.setVisibility(View.GONE);
+            batchSpinner.setVisibility(View.GONE);
+            layout1.setVisibility(View.GONE);
+            layout2.setVisibility(View.GONE);
+            layout3.setVisibility(View.GONE);
+            layout4.setVisibility(View.GONE);
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+
+            int width = display.getWidth(); // ((display.getWidth()*20)/100)
+            int height = display.getHeight();// ((display.getHeight()*30)/100)
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+            imageView.setLayoutParams(parms);
+
+            flag=false;
+        }
+        else
+        {
+            dateSpinner.setVisibility(View.VISIBLE);
+            batchSpinner.setVisibility(View.VISIBLE);
+            layout1.setVisibility(View.VISIBLE);
+            layout2.setVisibility(View.VISIBLE);
+            layout3.setVisibility(View.VISIBLE);
+            layout4.setVisibility(View.VISIBLE);
+
+
+            int width = 400; // ((display.getWidth()*20)/100)
+            int height = 400;// ((display.getHeight()*30)/100)
+            LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(width,height);
+            imageView.setLayoutParams(parms);
+            flag=true;
+        }
+
+    }
     public void realtimeUpdate()
     {
         Calendar calendar=Calendar.getInstance();
