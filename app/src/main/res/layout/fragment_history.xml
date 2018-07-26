@@ -45,7 +45,7 @@ android:id="@+id/layout1"
             android:text="ATTENDANCE" />
 
         <TextView
-            android:id="@+id/textView30"
+            android:id="@+id/attendenceText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

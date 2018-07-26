@@ -1,49 +1,40 @@
 package bnlive.in.lictmonitor.admin;
 
-import android.app.ActionBar;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-
-
-import android.text.Layout;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.google.firebase.firestore.DocumentChange;
-
-import bnlive.in.lictmonitor.MainActivity;
-import bnlive.in.lictmonitor.R;
-
-import bnlive.in.lictmonitor.RegistrationLogin;
-import bnlive.in.lictmonitor.common.FragmentLogin;
-import bnlive.in.lictmonitor.common.FragmentRegistration;
-
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.widget.Toast;
 
+import java.util.List;
+
+import bnlive.in.lictmonitor.IBatchData;
+import bnlive.in.lictmonitor.R;
+import bnlive.in.lictmonitor.RegistrationLogin;
+import bnlive.in.lictmonitor.model.BatchStatusModel;
+
 public class AdminNav extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener,IBatchData{
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -184,6 +175,13 @@ long currenttime;
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public List<BatchStatusModel> getBatchData() {
+        List<BatchStatusModel> mergeList=dashboardFragment.getDataList();
+        return mergeList;
+    }
+
     public static class PlaceholderFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
@@ -272,6 +270,7 @@ editor.commit();
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -285,7 +284,7 @@ editor.commit();
             switch (position)
             {
                 case 0:
-                   DashboardFragment dashboardFragment=new DashboardFragment();
+                    dashboardFragment=new DashboardFragment();
                     return dashboardFragment;
                 case 1:
                     AdminMapFragment mapFragment=new AdminMapFragment();

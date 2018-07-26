@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
@@ -48,6 +49,12 @@ public class HistoryFragment extends Fragment {
     private LinearLayout layout2;
     private LinearLayout layout3;
     private LinearLayout layout4;
+    private TextView attendence;
+    private TextView startTime;
+    private TextView endTime;
+    private TextView trainerName;
+    List<BatchStatusModel> batchList;
+    AdminNav parent;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -62,6 +69,11 @@ public class HistoryFragment extends Fragment {
         layout2=view.findViewById(R.id.layout2);
         layout3=view.findViewById(R.id.layout3);
         layout4=view.findViewById(R.id.layout4);
+        parent=(AdminNav) getActivity();
+        attendence=view.findViewById(R.id.attendenceText);
+        startTime=view.findViewById(R.id.txtBatchStarted);
+        endTime=view.findViewById(R.id.txtBatchFinished);
+        trainerName=view.findViewById(R.id.txtTrainerName);
         flag=true;
         getImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +111,7 @@ selectImage();
         });
         return view;
     }
-    List<BatchStatusModel> batchList;
+
 
 
     public void selectImage()
@@ -139,6 +151,14 @@ selectImage();
         }
 
     }
+    public void setDataText(BatchStatusModel batchStatusModel)
+    {
+        trainerName.setText(batchStatusModel.getTrainer_name());
+        startTime.setText(batchStatusModel.getStart());
+        endTime.setText(batchStatusModel.getEnd());
+        attendence.setText(batchStatusModel.getAttendance());
+    }
+    List<BatchStatusModel> list;
     public void realtimeUpdate()
     {
         Calendar calendar=Calendar.getInstance();
@@ -154,7 +174,7 @@ selectImage();
                         }
                         if(querySnapshot!=null)
                         {
-                            List<BatchStatusModel> list=new ArrayList<>();
+                      list=new ArrayList<>();
                             String[] strArray=new String[2];
                             int i=0;
                             for(DocumentSnapshot snapshot:querySnapshot)
@@ -167,7 +187,7 @@ selectImage();
 //                               i++;
                          //       Log.d(TAG,"Data: "+model.toString());
                             }
-
+Log.d("batchStatusModel",list.toString());
                           //  setDataList(list);
                             Log.d("Data","Data add success!");
                           //  setDataUpdated(true);

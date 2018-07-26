@@ -1,27 +1,19 @@
 package bnlive.in.lictmonitor.admin;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -57,6 +49,10 @@ public class DashboardFragment extends Fragment{
 
     public void setDataUpdated(boolean dataUpdated) {
         isDataUpdated = dataUpdated;
+    }
+
+    public List<BatchStatusModel> getDataList() {
+        return dataList;
     }
 
     NotificationManager notif;
@@ -125,7 +121,7 @@ public void searchView()
         Calendar calendar=Calendar.getInstance();
         String timestamp=new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
         db.collection("batch_status")
-                .whereEqualTo("date",timestamp)
+        //        .whereEqualTo("date",timestamp)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {

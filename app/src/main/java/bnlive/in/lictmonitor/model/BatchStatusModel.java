@@ -14,10 +14,11 @@ public class BatchStatusModel {
     private String trainer_name;
     private String university_name;
     private String date;
+    private String attendance;
     public BatchStatusModel() {
     }
 
-    public BatchStatusModel(String batch_code, String day, String end, String start, String status, String trainer_name, String university_name, String date) {
+    public BatchStatusModel(String batch_code, String day, String end, String start, String status, String trainer_name, String university_name, String date,String attendance) {
         this.batch_code = batch_code;
         this.day = day;
         this.end = end;
@@ -26,6 +27,15 @@ public class BatchStatusModel {
         this.trainer_name = trainer_name;
         this.university_name = university_name;
         this.date = date;
+        this.attendance=attendance;
+    }
+
+    public String getAttendance() {
+        return attendance;
+    }
+
+    public void setAttendance(String attendance) {
+        this.attendance = attendance;
     }
 
     public String getBatch_code() {
