@@ -13,9 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +20,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -32,9 +28,6 @@ import java.util.List;
 
 import bnlive.in.lictmonitor.R;
 import bnlive.in.lictmonitor.admin.AdminNav;
-import bnlive.in.lictmonitor.trainer.TrainerNavActivity;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Sk Faisal on 3/25/2018.
@@ -103,7 +96,17 @@ public class FragmentLogin extends Fragment {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                          getUserRole(user.getEmail());
+//                            Intent intent=new Intent(context, AdminNav.class);
+//                            startActivity(intent);
+//                            getActivity().finish();
 
+//                            SharedPreferences.Editor editor=sharedPreferences.edit();
+//                            editor.putString("email",user.getEmail());
+//                            editor.putString("name","Shaikh Faisal Hossain");
+//                            editor.putString("role",role);
+//                            editor.commit();
+//                            Intent intent=new Intent(context, AdminNav.class);
+//                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
@@ -136,8 +139,20 @@ public class FragmentLogin extends Fragment {
 //                         Object object=task.getResult();
 //                         QuerySnapshot snapshots= (QuerySnapshot) object;
                             QuerySnapshot snapshots=task.getResult();
+                            //Log.d(TAG, "Successfully get documents",);
+//                            SharedPreferences.Editor editor=sharedPreferences.edit();
+//                            editor.putString("email",email);
+//                            editor.putString("name","Shaikh Faisal Hossain");
+//                            editor.putString("role","admin");
+//                            editor.commit();
+//                            Intent intent=new Intent(context, AdminNav.class);
+//                            startActivity(intent);
+//                            getActivity().finish();
+//                            List<DocumentSnapshot> dlist=snapshots.getDocuments();
+//                            DocumentSnapshot documentSnapshot2=dlist.get(0);
 
-                            for(DocumentSnapshot documentSnapshot:snapshots)
+                            List<DocumentSnapshot> documentSnapshots=snapshots.getDocuments();
+                            for(DocumentSnapshot documentSnapshot:documentSnapshots)
                             {
                                 Log.d(TAG, "Successfully get documents. Role: "+documentSnapshot.get("role"));
                                 role=""+documentSnapshot.get("role");
@@ -149,6 +164,7 @@ public class FragmentLogin extends Fragment {
 //                                if(role.equals(dbrole))
 //                                {
 //                                    Log.d(TAG, "Condition role: "+role);
+
                                   if(role.equals("admin"))
                                     {
                                         SharedPreferences.Editor editor=sharedPreferences.edit();
@@ -162,11 +178,12 @@ public class FragmentLogin extends Fragment {
                                     }
 
                                 //}
+
                                 else{
                                     Toast.makeText(context,"Role Incorrect",Toast.LENGTH_LONG).show();
                                 }
                             }
-
+                            Log.d(TAG, "data loop out "+documentSnapshots.size()+" Email: "+email);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
