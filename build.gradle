@@ -9,7 +9,11 @@ buildscript {
     dependencies {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         classpath 'com.android.tools.build:gradle:3.1.2'
+=======
+        classpath 'com.android.tools.build:gradle:3.0.1'
+>>>>>>> parent of e3c41c3... update monitor
 =======
         classpath 'com.android.tools.build:gradle:3.0.1'
 >>>>>>> parent of e3c41c3... update monitor
