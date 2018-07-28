@@ -1,5 +1,9 @@
 package bnlive.in.lictmonitor.admin;
 
+
+import android.app.ActionBar;
+import android.support.design.widget.TabLayout;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +15,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import android.support.v4.view.ViewPager;
+
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -22,7 +34,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,9 +66,6 @@ private TextView headerRole;
 private NavigationView navigationView;
 private FragmentManager fragmentManager;
 private DashboardFragment dashboardFragment;
-private     ViewGroup containern;
-    private    LayoutInflater inflatern;
-    private  Bundle savedInstanceStaten;
     View headerView;
 Context context;
     private final String TAG="adminnav";
@@ -212,11 +220,7 @@ long currenttime;
             return rootView;
         }
     }
-public View getView(ViewGroup container, LayoutInflater inflater)
-{
-    View rootView=inflater.inflate(R.layout.fragment_history,container,false);
-    return  rootView;
-}
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -225,27 +229,9 @@ public View getView(ViewGroup container, LayoutInflater inflater)
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            LinearLayout layout=findViewById(R.id.changeLayout);
-            layout.setVisibility(View.GONE);
-
-            TabLayout tabLayout=findViewById(R.id.tabs);
-            ViewPager pager=findViewById(R.id.container);
-            tabLayout.setVisibility(View.VISIBLE);
-            pager.setVisibility(View.VISIBLE);
-
 
         } else if (id == R.id.nav_gallery) {
 
-
-//getLayoutInflater().inflate(R.layout.fragment_history,container,false);
-            LayoutInflater inflater=getLayoutInflater();
-            TabLayout tabLayout=findViewById(R.id.tabs);
-            ViewPager pager=findViewById(R.id.container);
-            tabLayout.setVisibility(View.GONE);
-           pager.setVisibility(View.GONE);
-            LinearLayout layout=findViewById(R.id.changeLayout);
-            layout.setVisibility(View.VISIBLE);
-          fragmentManager.beginTransaction().replace(R.id.changeLayout,new HistoryFragment()).commit();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_logout) {
