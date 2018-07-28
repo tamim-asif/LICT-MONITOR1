@@ -60,10 +60,10 @@ public class FragmentRegistration extends Fragment {
         passwordText=view.findViewById(R.id.r_password);
 
 
-       // VectorDrawableCompat drawableCompat=VectorDrawableCompat.create(getActivity().getResources(), R.drawable.ic_key, passwordText.getContext().getTheme());
-      //  passwordText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawableCompat, null, null, null);
+        VectorDrawableCompat drawableCompat=VectorDrawableCompat.create(getActivity().getResources(), R.drawable.ic_key, passwordText.getContext().getTheme());
+        passwordText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawableCompat, null, null, null);
         repasswordText=view.findViewById(R.id.r_repassword);
-     //   repasswordText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawableCompat, null, null, null);
+        repasswordText.setCompoundDrawablesRelativeWithIntrinsicBounds(drawableCompat, null, null, null);
 
         name=view.findViewById(R.id.editText);
 
