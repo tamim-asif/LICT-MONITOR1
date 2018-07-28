@@ -80,6 +80,7 @@ public class HistoryFragment extends Fragment {
             public void onClick(View v) {
                 String batch=batchSpinner.getSelectedItem().toString();
                 String date=dateSpinner.getSelectedItem().toString();
+                searchDetails();
                 SimpleDateFormat input = new SimpleDateFormat("dd/MM/yy");
                 SimpleDateFormat output = new SimpleDateFormat("dd-MMM-yyyy");
                 String outText="";
@@ -103,6 +104,7 @@ public class HistoryFragment extends Fragment {
         });
         reference=storage.getReference();
         realtimeUpdate();
+        clearData();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,10 +155,26 @@ selectImage();
     }
     public void setDataText(BatchStatusModel batchStatusModel)
     {
-        trainerName.setText(batchStatusModel.getTrainer_name());
-        startTime.setText(batchStatusModel.getStart());
-        endTime.setText(batchStatusModel.getEnd());
-        attendence.setText(batchStatusModel.getAttendance());
+
+
+        if(batchStatusModel==null)
+        {
+            clearData();
+        }
+        else
+        {
+            attendence.setText(batchStatusModel.getAttendance());
+            trainerName.setText(batchStatusModel.getTrainer_name());
+            startTime.setText(batchStatusModel.getStart());
+            endTime.setText(batchStatusModel.getEnd());
+        }
+    }
+    public void clearData()
+    {
+        trainerName.setText("");
+        startTime.setText("");
+        endTime.setText("");
+        attendence.setText("");
     }
     List<BatchStatusModel> list;
     public void realtimeUpdate()
@@ -214,5 +232,26 @@ i++;
         ArrayAdapter adapter2=new ArrayAdapter(getActivity().getBaseContext(),android.R.layout.simple_spinner_item,dateList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dateSpinner.setAdapter(adapter2);
+    }
+    public void searchDetails()
+    {
+        String date=""+dateSpinner.getSelectedItem();
+        String batchText=""+batchSpinner.getSelectedItem();
+        boolean flag=false;
+        for(BatchStatusModel bm:list)
+        {
+            if(batchText.equals(bm.getBatch_code()))
+            {
+                if(date.equals(bm.getDate()))
+                {
+                    setDataText(bm);
+                    flag=true;
+                }
+            }
+        }
+        if(flag==false)
+        {
+            setDataText(null);
+        }
     }
 }
