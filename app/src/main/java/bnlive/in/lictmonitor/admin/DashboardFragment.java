@@ -121,7 +121,7 @@ public void searchView()
         Calendar calendar=Calendar.getInstance();
         String timestamp=new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
         db.collection("batch_status")
-             //   .whereEqualTo("date",timestamp)
+        //        .whereEqualTo("date",timestamp)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(QuerySnapshot querySnapshot, FirebaseFirestoreException e) {
@@ -141,13 +141,9 @@ public void searchView()
                                 Log.d(TAG,"Data: "+model.toString());
                             }
                             setDataList(list);
-                            Log.d("DataCheck","Data add success! "+list.size());
+                            Log.d("Data","Data add success!");
 setDataUpdated(true);
                             searchView();
-                        }
-                        else
-                        {
-                            Log.d("Data","Data null");
                         }
                     }
                 });
